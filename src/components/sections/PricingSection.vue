@@ -91,8 +91,13 @@ const getPrice = (plan) => {
       <!-- Pricing Cards -->
       <div
         v-else
-        class="grid gap-8 max-w-6xl mx-auto"
-        :class="plans.length === 3 ? 'md:grid-cols-3' : plans.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-1 max-w-md'"
+        class="grid gap-6 max-w-7xl mx-auto"
+        :class="{
+          'md:grid-cols-4': plans.length === 4,
+          'md:grid-cols-3': plans.length === 3,
+          'md:grid-cols-2': plans.length === 2,
+          'md:grid-cols-1 max-w-md': plans.length === 1
+        }"
       >
         <div
           v-for="(plan, index) in plans"
