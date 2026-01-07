@@ -1,0 +1,266 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// ==========================================
+// Tipografía Metropolis
+// ==========================================
+@font-face {
+  font-family: 'Metropolis';
+  src: url('../fonts/metropolis/Metropolis-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Metropolis';
+  src: url('../fonts/metropolis/Metropolis-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Metropolis';
+  src: url('../fonts/metropolis/Metropolis-SemiBold.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Metropolis';
+  src: url('../fonts/metropolis/Metropolis-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Metropolis';
+  src: url('../fonts/metropolis/Metropolis-ExtraBold.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+// ==========================================
+// Variables CSS
+// ==========================================
+:root {
+  --color-primary: #0061f2;
+  --color-primary-soft: #dae7fb;
+  --color-secondary: #6900c7;
+  --color-teal: #00ba94;
+  --color-dark: #212832;
+  --color-gray-100: #f2f6fc;
+  --color-gray-200: #e0e5ec;
+  --color-gray-500: #a7aeb8;
+  --color-gray-600: #69707a;
+  --color-gray-700: #4a515b;
+}
+
+// ==========================================
+// Base Styles
+// ==========================================
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Metropolis', system-ui, -apple-system, sans-serif;
+  color: var(--color-dark);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// ==========================================
+// Componentes Reutilizables
+// ==========================================
+@layer components {
+  // Gradientes
+  .bg-gradient-primary {
+    @apply bg-gradient-to-br from-primary-500 to-secondary-500;
+  }
+
+  // Botones
+  .btn {
+    @apply inline-flex items-center justify-center px-6 py-3 font-medium rounded-lg transition-all duration-200;
+
+    &-primary {
+      @apply bg-primary-500 text-white hover:bg-primary-600 shadow-lg hover:shadow-xl hover:-translate-y-0.5;
+    }
+
+    &-teal {
+      @apply bg-teal-500 text-white hover:bg-teal-600 shadow-lg hover:shadow-xl hover:-translate-y-0.5;
+    }
+
+    &-white {
+      @apply bg-white text-primary-500 hover:bg-gray-50 shadow-lg hover:shadow-xl hover:-translate-y-0.5;
+    }
+
+    &-outline {
+      @apply border-2 border-white text-white hover:bg-white hover:text-primary-500;
+    }
+
+    &-lg {
+      @apply px-8 py-4 text-lg;
+    }
+
+    &-sm {
+      @apply px-4 py-2 text-sm;
+    }
+  }
+
+  // Icon Stack
+  .icon-stack {
+    @apply flex items-center justify-center rounded-full;
+
+    &-sm {
+      @apply w-10 h-10;
+    }
+
+    &-md {
+      @apply w-12 h-12;
+    }
+
+    &-lg {
+      @apply w-16 h-16;
+    }
+
+    &-xl {
+      @apply w-20 h-20;
+    }
+
+    svg {
+      @apply w-1/2 h-1/2;
+    }
+  }
+
+  // Cards
+  .card {
+    @apply bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300;
+
+    &:hover {
+      @apply shadow-xl;
+    }
+
+    &-pricing {
+      @apply border-2 border-transparent hover:border-primary-500;
+
+      &.featured {
+        @apply border-primary-500 relative;
+
+        &::before {
+          content: 'Popular';
+          @apply absolute top-0 right-0 bg-primary-500 text-white text-xs font-semibold px-3 py-1 rounded-bl-lg;
+        }
+      }
+    }
+  }
+
+  // Pricing
+  .pricing-price {
+    @apply text-5xl font-bold text-dark;
+
+    sup {
+      @apply text-2xl font-medium align-top;
+    }
+
+    .period {
+      @apply text-base font-normal text-gray-500;
+    }
+  }
+
+  // Section
+  .section {
+    @apply py-16 md:py-24;
+
+    &-dark {
+      @apply bg-dark text-white;
+    }
+
+    &-light {
+      @apply bg-gray-100;
+    }
+  }
+
+  // Container
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  // Form
+  .form-input {
+    @apply w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 outline-none;
+
+    &:focus {
+      @apply shadow-lg;
+    }
+
+    &.error {
+      @apply border-red-500 focus:ring-red-500;
+    }
+  }
+
+  .form-label {
+    @apply block text-sm font-medium text-gray-700 mb-2;
+  }
+
+  .form-error {
+    @apply text-red-500 text-sm mt-1;
+  }
+
+  // SVG Border
+  .svg-border-rounded {
+    @apply absolute bottom-0 left-0 w-full overflow-hidden leading-none;
+    transform: translateY(1px);
+
+    svg {
+      @apply relative block w-full;
+      height: 50px;
+    }
+  }
+
+  // Lift effect
+  .lift {
+    @apply transition-all duration-300;
+
+    &:hover {
+      @apply -translate-y-1 shadow-xl;
+    }
+  }
+}
+
+// ==========================================
+// Animaciones
+// ==========================================
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+// ==========================================
+// Navbar Scroll Effect
+// ==========================================
+.navbar-scrolled {
+  @apply bg-white/95 backdrop-blur-sm shadow-lg;
+
+  .nav-link {
+    @apply text-dark;
+  }
+
+  .logo-text {
+    @apply text-primary-500;
+  }
+}
