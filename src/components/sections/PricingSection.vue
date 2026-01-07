@@ -119,13 +119,10 @@ const getPrice = (plan) => {
           <!-- Price -->
           <div class="text-center mb-8">
             <div class="pricing-price">
-              <template v-if="plan.price[billingPeriod] !== null">
-                <sup v-if="plan.price[billingPeriod] > 0"></sup>
-              </template>
               {{ getPrice(plan) }}
             </div>
-            <p v-if="plan.priceNote" class="text-gray-500 text-sm mt-1">
-              {{ plan.priceNote }}
+            <p v-if="!plan.isFree" class="text-gray-500 text-sm mt-1">
+              {{ billingPeriod === 'monthly' ? '/mes' : '/año' }}
             </p>
           </div>
 
