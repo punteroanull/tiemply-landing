@@ -1,72 +1,27 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
+import { usePlans } from '@/composables/usePlans'
+
+const { plans, isLoading, error, fetchPlans, formatPrice } = usePlans()
 
 const billingPeriod = ref('monthly')
 
-const plans = [
-  {
-    id: 'starter',
-    name: 'Starter',
-    description: 'Para pequeños equipos que empiezan',
-    price: { monthly: 0, yearly: 0 },
-    features: [
-      'Hasta 5 empleados',
-      'Fichaje desde app móvil',
-      'Informes básicos',
-      'Soporte por email',
-    ],
-    limitations: [
-      'Sin geolocalización',
-      'Sin gestión de turnos',
-    ],
-    cta: 'Empezar gratis',
-    featured: false,
-  },
-  {
-    id: 'professional',
-    name: 'Professional',
-    description: 'Para empresas en crecimiento',
-    price: { monthly: 4.99, yearly: 3.99 },
-    priceNote: 'por empleado/mes',
-    features: [
-      'Empleados ilimitados',
-      'Fichaje desde cualquier dispositivo',
-      'Geolocalización',
-      'Gestión de ausencias',
-      'Informes avanzados',
-      'Exportación Excel/PDF',
-      'Soporte prioritario',
-    ],
-    limitations: [],
-    cta: 'Empezar prueba gratis',
-    featured: true,
-  },
-  {
-    id: 'enterprise',
-    name: 'Enterprise',
-    description: 'Para grandes organizaciones',
-    price: { monthly: null, yearly: null },
-    priceText: 'Personalizado',
-    features: [
-      'Todo de Professional',
-      'Múltiples centros de trabajo',
-      'API personalizada',
-      'Integraciones a medida',
-      'SLA garantizado',
-      'Gestor de cuenta dedicado',
-      'Formación presencial',
-    ],
-    limitations: [],
-    cta: 'Contactar ventas',
-    featured: false,
-  },
-]
+// Cargar planes al montar el componente
+onMounted(() => {
+  fetchPlans()
+})
+
+// Calcular el descuento máximo entre los planes
+const maxDiscount = computed(() => {
+  if (!plans.value.length) return 20
+  const discounts = plans.value
+    .map(p => p.yearlyDiscount)
+    .filter(d => d > 0)
+  return discounts.length ? Math.round(Math.max(...discounts)) : 20
+})
 
 const getPrice = (plan) => {
-  if (plan.priceText) return plan.priceText
-  const price = plan.price[billingPeriod.value]
-  if (price === 0) return 'Gratis'
-  return `${price.toFixed(2).replace('.', ',')}€`
+  return formatPrice(plan, billingPeriod.value)
 }
 </script>
 
@@ -113,12 +68,32 @@ const getPrice = (plan) => {
           v-if="billingPeriod === 'yearly'"
           class="ml-2 px-2 py-1 bg-teal-100 text-teal-600 text-xs font-medium rounded-full"
         >
-          -20%
+          -{{ maxDiscount }}%
         </span>
       </div>
 
+      <!-- Loading State -->
+      <div v-if="isLoading" class="flex justify-center items-center py-12">
+        <svg class="animate-spin h-10 w-10 text-primary-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+      </div>
+
+      <!-- Error State -->
+      <div v-else-if="error" class="text-center py-12">
+        <p class="text-red-500 mb-4">{{ error }}</p>
+        <button @click="fetchPlans(true)" class="btn btn-outline">
+          Reintentar
+        </button>
+      </div>
+
       <!-- Pricing Cards -->
-      <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      <div
+        v-else
+        class="grid gap-8 max-w-6xl mx-auto"
+        :class="plans.length === 3 ? 'md:grid-cols-3' : plans.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-1 max-w-md'"
+      >
         <div
           v-for="(plan, index) in plans"
           :key="plan.id"

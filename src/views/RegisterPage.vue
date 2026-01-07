@@ -2,45 +2,22 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { companyService } from '@/services/api'
+import { usePlans } from '@/composables/usePlans'
 
 const route = useRoute()
 const router = useRouter()
+
+// Plans from API
+const { plans, isLoading: plansLoading, error: plansError, fetchPlans, getDisplayPrice } = usePlans()
 
 // Steps
 const currentStep = ref(1)
 const totalSteps = 3
 
-// Plans
-const plans = [
-  {
-    id: 'starter',
-    name: 'Starter',
-    price: 'Gratis',
-    description: 'Hasta 5 empleados',
-    features: ['Fichaje básico', 'Informes básicos', 'Soporte email'],
-  },
-  {
-    id: 'professional',
-    name: 'Professional',
-    price: '4,99€',
-    priceNote: '/empleado/mes',
-    description: 'Empleados ilimitados',
-    features: ['Todo de Starter', 'Geolocalización', 'Gestión ausencias', 'Soporte prioritario'],
-    featured: true,
-  },
-  {
-    id: 'enterprise',
-    name: 'Enterprise',
-    price: 'Personalizado',
-    description: 'Grandes organizaciones',
-    features: ['Todo de Professional', 'API personalizada', 'SLA garantizado', 'Gestor dedicado'],
-  },
-]
-
 // Form data
 const formData = ref({
-  // Step 1: Plan selection
-  selectedPlan: route.query.plan || 'professional',
+  // Step 1: Plan selection (se establece después de cargar los planes)
+  selectedPlan: route.query.plan || '',
 
   // Step 2: Company data
   companyName: '',
@@ -152,7 +129,24 @@ const handleSubmit = async () => {
 // Progress
 const progressWidth = computed(() => `${(currentStep.value / totalSteps) * 100}%`)
 
-onMounted(() => {
+onMounted(async () => {
+  // Cargar planes de la API
+  await fetchPlans()
+
+  // Establecer plan por defecto si viene en la URL o usar el featured
+  if (plans.value.length) {
+    const queryPlan = route.query.plan
+    const planExists = plans.value.some(p => p.slug === queryPlan || p.id === queryPlan)
+
+    if (queryPlan && planExists) {
+      formData.value.selectedPlan = queryPlan
+    } else {
+      // Usar el plan featured o el segundo (generalmente el de pago)
+      const featuredPlan = plans.value.find(p => p.featured)
+      formData.value.selectedPlan = featuredPlan?.slug || plans.value[1]?.slug || plans.value[0]?.slug
+    }
+  }
+
   setTimeout(() => {
     if (window.feather) window.feather.replace()
   }, 100)
@@ -199,14 +193,32 @@ watch(currentStep, () => {
         <!-- Step 1: Plan Selection -->
         <div v-if="currentStep === 1">
           <h2 class="text-xl font-bold text-dark mb-6">Selecciona tu plan</h2>
-          <div class="space-y-4">
+
+          <!-- Loading State -->
+          <div v-if="plansLoading" class="flex justify-center items-center py-12">
+            <svg class="animate-spin h-8 w-8 text-primary-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          </div>
+
+          <!-- Error State -->
+          <div v-else-if="plansError" class="text-center py-8">
+            <p class="text-red-500 mb-4">{{ plansError }}</p>
+            <button @click="fetchPlans(true)" class="btn btn-outline">
+              Reintentar
+            </button>
+          </div>
+
+          <!-- Plans List -->
+          <div v-else class="space-y-4">
             <div
               v-for="plan in plans"
               :key="plan.id"
-              @click="selectPlan(plan.id)"
+              @click="selectPlan(plan.slug)"
               class="p-6 border-2 rounded-xl cursor-pointer transition-all duration-200"
               :class="[
-                formData.selectedPlan === plan.id
+                formData.selectedPlan === plan.slug
                   ? 'border-primary-500 bg-primary-50'
                   : 'border-gray-200 hover:border-gray-300'
               ]"
@@ -235,7 +247,7 @@ watch(currentStep, () => {
                   </ul>
                 </div>
                 <div class="text-right ml-4">
-                  <div class="text-2xl font-bold text-dark">{{ plan.price }}</div>
+                  <div class="text-2xl font-bold text-dark">{{ getDisplayPrice(plan) }}</div>
                   <div v-if="plan.priceNote" class="text-xs text-gray-500">{{ plan.priceNote }}</div>
                 </div>
               </div>

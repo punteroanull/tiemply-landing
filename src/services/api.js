@@ -31,6 +31,27 @@ api.interceptors.response.use(
   }
 )
 
+export const plansService = {
+  /**
+   * Obtener todos los planes de suscripción activos
+   * @returns {Promise}
+   */
+  async getAll() {
+    const response = await api.get('/subscription-plans')
+    return response.data
+  },
+
+  /**
+   * Obtener un plan por su slug
+   * @param {string} slug - Slug del plan
+   * @returns {Promise}
+   */
+  async getBySlug(slug) {
+    const response = await api.get(`/subscription-plans/${slug}`)
+    return response.data
+  },
+}
+
 export const companyService = {
   /**
    * Registrar una nueva empresa
