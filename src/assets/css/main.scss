@@ -3,47 +3,8 @@
 @tailwind utilities;
 
 // ==========================================
-// Tipografía Metropolis
+// Tipografía - Inter (Google Fonts)
 // ==========================================
-@font-face {
-  font-family: 'Metropolis';
-  src: url('../fonts/metropolis/Metropolis-Regular.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Metropolis';
-  src: url('../fonts/metropolis/Metropolis-Medium.otf') format('opentype');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Metropolis';
-  src: url('../fonts/metropolis/Metropolis-SemiBold.otf') format('opentype');
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Metropolis';
-  src: url('../fonts/metropolis/Metropolis-Bold.otf') format('opentype');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Metropolis';
-  src: url('../fonts/metropolis/Metropolis-ExtraBold.otf') format('opentype');
-  font-weight: 800;
-  font-style: normal;
-  font-display: swap;
-}
 
 // ==========================================
 // Variables CSS
@@ -69,7 +30,7 @@ html {
 }
 
 body {
-  font-family: 'Metropolis', system-ui, -apple-system, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   color: var(--color-dark);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;

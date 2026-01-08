@@ -3,10 +3,11 @@
 
 <template>
   <section class="relative min-h-screen flex items-center bg-gradient-to-br from-primary-500 to-secondary-500 pt-20 overflow-hidden">
-    <!-- Background Pattern -->
+    <!-- Background Pattern (deshabilitado - imagen no disponible)
     <div class="absolute inset-0 opacity-10">
       <div class="absolute inset-0" style="background-image: url('/img/backgrounds/pattern-shapes.png'); background-size: cover;"></div>
     </div>
+    -->
 
     <div class="container-custom relative z-10">
       <div class="grid lg:grid-cols-2 gap-12 items-center">

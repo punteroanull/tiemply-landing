@@ -49,7 +49,7 @@ export default {
         dark: '#212832',
       },
       fontFamily: {
-        sans: ['Metropolis', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
     },
   },
