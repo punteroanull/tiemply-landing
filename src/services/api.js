@@ -52,6 +52,24 @@ export const plansService = {
   },
 }
 
+export const contactService = {
+  /**
+   * Enviar mensaje de contacto
+   * @param {Object} data - Datos del formulario de contacto
+   * @returns {Promise}
+   */
+  async send(data) {
+    const response = await api.post('/contact', {
+      name: data.name,
+      email: data.email,
+      subject: data.subject,
+      message: data.message,
+      type: 'inquiry',
+    })
+    return response.data
+  },
+}
+
 export const companyService = {
   /**
    * Registrar una nueva empresa

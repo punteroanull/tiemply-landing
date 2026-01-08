@@ -1,32 +1,44 @@
 <script setup>
 import { ref } from 'vue'
+import { contactService } from '@/services/api'
 
 const formData = ref({
   name: '',
   email: '',
-  company: '',
+  subject: '',
   message: '',
 })
 
 const isSubmitting = ref(false)
 const isSubmitted = ref(false)
+const errorMessage = ref('')
 
 const handleSubmit = async () => {
   isSubmitting.value = true
+  errorMessage.value = ''
 
-  // Simular envío
-  await new Promise(resolve => setTimeout(resolve, 1000))
+  try {
+    await contactService.send(formData.value)
 
-  isSubmitting.value = false
-  isSubmitted.value = true
+    isSubmitted.value = true
 
-  // Reset form
-  formData.value = { name: '', email: '', company: '', message: '' }
+    // Reset form
+    formData.value = { name: '', email: '', subject: '', message: '' }
 
-  // Reset success message after 5 seconds
-  setTimeout(() => {
-    isSubmitted.value = false
-  }, 5000)
+    // Reset success message after 5 seconds
+    setTimeout(() => {
+      isSubmitted.value = false
+    }, 5000)
+  } catch (error) {
+    errorMessage.value = error.message || 'Ha ocurrido un error al enviar el mensaje. Inténtalo de nuevo.'
+
+    // Reset error message after 5 seconds
+    setTimeout(() => {
+      errorMessage.value = ''
+    }, 5000)
+  } finally {
+    isSubmitting.value = false
+  }
 }
 </script>
 
@@ -55,11 +67,12 @@ const handleSubmit = async () => {
               </div>
               <div>
                 <p class="text-sm text-gray-500">Email</p>
-                <a href="mailto:hola@tiemply.com" class="font-medium text-dark hover:text-primary-500">
-                  hola@tiemply.com
+                <a href="mailto:info@tiemply.com" class="font-medium text-dark hover:text-primary-500">
+                  info@tiemply.com
                 </a>
               </div>
             </div>
+            <!-- Teléfono (deshabilitado temporalmente)
             <div class="flex items-center">
               <div class="icon-stack icon-stack-md bg-primary-100 text-primary-500 mr-4">
                 <i data-feather="phone"></i>
@@ -71,6 +84,8 @@ const handleSubmit = async () => {
                 </a>
               </div>
             </div>
+            -->
+            <!-- Chat en vivo (deshabilitado temporalmente)
             <div class="flex items-center">
               <div class="icon-stack icon-stack-md bg-primary-100 text-primary-500 mr-4">
                 <i data-feather="message-circle"></i>
@@ -80,6 +95,7 @@ const handleSubmit = async () => {
                 <p class="font-medium text-dark">Lun-Vie 9:00-18:00</p>
               </div>
             </div>
+            -->
           </div>
         </div>
 
@@ -112,13 +128,14 @@ const handleSubmit = async () => {
                 </div>
               </div>
               <div>
-                <label for="company" class="form-label">Empresa</label>
+                <label for="subject" class="form-label">Asunto</label>
                 <input
-                  id="company"
-                  v-model="formData.company"
+                  id="subject"
+                  v-model="formData.subject"
                   type="text"
+                  required
                   class="form-input"
-                  placeholder="Nombre de tu empresa"
+                  placeholder="¿Sobre qué quieres hablar?"
                 />
               </div>
               <div>
@@ -162,6 +179,24 @@ const handleSubmit = async () => {
                 >
                   <i data-feather="check-circle" class="w-5 h-5 inline mr-2"></i>
                   ¡Mensaje enviado! Te responderemos pronto.
+                </div>
+              </transition>
+
+              <!-- Error Message -->
+              <transition
+                enter-active-class="transition duration-200 ease-out"
+                enter-from-class="opacity-0 translate-y-2"
+                enter-to-class="opacity-100 translate-y-0"
+                leave-active-class="transition duration-150 ease-in"
+                leave-from-class="opacity-100 translate-y-0"
+                leave-to-class="opacity-0 translate-y-2"
+              >
+                <div
+                  v-if="errorMessage"
+                  class="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-center"
+                >
+                  <i data-feather="alert-circle" class="w-5 h-5 inline mr-2"></i>
+                  {{ errorMessage }}
                 </div>
               </transition>
             </form>

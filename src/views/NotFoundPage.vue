@@ -29,7 +29,7 @@ onMounted(() => {
             <i data-feather="home" class="w-5 h-5 mr-2"></i>
             Volver al inicio
           </router-link>
-          <a href="mailto:hola@tiemply.com" class="btn border-gray-300 text-gray-700 hover:bg-gray-50">
+          <a href="mailto:info@tiemply.com" class="btn border-gray-300 text-gray-700 hover:bg-gray-50">
             <i data-feather="mail" class="w-5 h-5 mr-2"></i>
             Contactar soporte
           </a>

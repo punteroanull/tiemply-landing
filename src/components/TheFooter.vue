@@ -23,10 +23,10 @@ const footerLinks = {
 }
 
 const socialLinks = [
-  { name: 'Twitter', icon: 'twitter', href: '#' },
-  { name: 'LinkedIn', icon: 'linkedin', href: '#' },
-  { name: 'Instagram', icon: 'instagram', href: '#' },
-  { name: 'GitHub', icon: 'github', href: '#' },
+  { name: 'Twitter', icon: 'twitter', href: 'https://twitter.com/tiemply' },
+  // { name: 'LinkedIn', icon: 'linkedin', href: '#' },
+  { name: 'Instagram', icon: 'instagram', href: 'https://instagram.com/tiemply' },
+  // { name: 'GitHub', icon: 'github', href: '#' },
 ]
 </script>
 
